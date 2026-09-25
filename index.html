@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emberwake</title>
+</head>
+<body>
+  <div id="stage">
+    <canvas id="gl"></canvas>
+    <canvas id="fx"></canvas>
+    <div id="ui">
+      <div id="hud" class="hidden">
+        <div class="hp-wrap">
+          <div class="lvl">LV <span id="lvl">1</span></div>
+          <div class="bar hp"><div id="hpfill"></div><div id="hpghost"></div><span id="hptext">100</span></div>
+        </div>
+        <div class="night">
+          <img src="/sprites/hud_moon.png" class="nicon" alt="" />
+          <div class="bar nightbar"><div id="nightfill"></div><div id="bossmark"></div></div>
+          <img src="/sprites/hud_sun.png" class="nicon" alt="" />
+          <div id="clock">5:00</div>
+        </div>
+        <div class="score-wrap">
+          <div id="score">0</div>
+          <div id="combo" class="hidden"><span id="combon">x2</span><div class="bar combobar"><div id="combofill"></div></div></div>
+        </div>
+        <div id="kit"></div>
+        <div class="bar xp"><div id="xpfill"></div></div>
+        <div id="dash"><div id="dashfill"></div><span>DASH</span></div>
+        <div id="bossbar" class="hidden"><div class="bname">MOONMOTH MATRIARCH</div><div class="bar boss"><div id="bossfill"></div></div></div>
+        <div id="banner"></div>
+      </div>
+
+      <div id="title" class="screen">
+        <img id="logo" src="/sprites/logo.png" alt="Emberwake" />
+        <div class="tag">Keep the flame alive until dawn.</div>
+        <div class="press blink">PRESS ANY KEY</div>
+        <div class="how">
+          <div><kbd>WASD</kbd> move</div>
+          <div><kbd>SPACE</kbd> dash</div>
+          <div>your lantern fights on its own</div>
+          <div>light the braziers, their fire burns the dark</div>
+        </div>
+        <div id="best" class="best"></div>
+      </div>
+
+      <div id="levelup" class="screen hidden">
+        <div class="lu-title">THE FLAME GROWS</div>
+        <div class="lu-sub">choose a blessing</div>
+        <div id="cards"></div>
+        <div class="lu-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> or click</div>
+      </div>
+
+      <div id="pause" class="screen hidden">
+        <div class="lu-title">PAUSED</div>
+        <div class="lu-hint"><kbd>ESC</kbd> resume &nbsp; <kbd>M</kbd> mute music</div>
+      </div>
+
+      <div id="end" class="screen hidden">
+        <div id="endtitle" class="lu-title"></div>
+        <div id="endsub" class="lu-sub"></div>
+        <div id="stats"></div>
+        <div id="endscore"></div>
+        <div id="newbest" class="hidden">NEW BEST</div>
+        <div class="press blink">PRESS <kbd>R</kbd> TO RISE AGAIN</div>
+      </div>
+
+      <div id="flash"></div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

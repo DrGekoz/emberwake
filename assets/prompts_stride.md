@@ -1,0 +1,6 @@
+Generate game art for the pixel-art game EMBERWAKE. The attached image is a pixel-art sprite of a small hooded knight holding a lantern. Use your image generation tool twice, each time editing the attached sprite, and copy each resulting PNG to the exact path given. Do nothing else: no code, no scripts, no edits to other files. Do not ask questions. If a generation fails, retry once.
+
+For both images: keep EVERYTHING above the belt identical to the reference (hood, helmet, eyes, cloak, arms, lantern, straps, colors, pixel size, position in the canvas, overall scale). Same canvas framing and same transparent background, no ground, no shadow, no text. Only the legs change, drawn as a big, clearly readable running stride seen in 3/4 top-down view, 16-bit SNES pixel art with the same chunky pixel grid as the reference.
+
+1. assets/raw/stride_a.png : mid-run stride, the leg on the viewer's LEFT reaches far forward and down with the boot heel out, the leg on the viewer's RIGHT pushes far back with the boot toe behind, knees clearly bent, wide gap between the feet.
+2. assets/raw/stride_b.png : the mirror stride, the leg on the viewer's RIGHT reaches far forward, the leg on the viewer's LEFT pushes far back, knees clearly bent, wide gap between the feet.
