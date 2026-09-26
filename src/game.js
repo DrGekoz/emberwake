@@ -47,7 +47,7 @@ export class Game {
     this.plSil = new SpriteBatch(sc, spr.hero, { cap: 1, silhouette: true, frames: HERO_FRAMES, face: true });
     this.eb = {};
     for (const t of ENEMY_TYPES) this.eb[t] = new SpriteBatch(sc, spr[t === 'boss' ? 'boss_moth' : t], { cap: t === 'boss' ? 2 : 420, glow: D.ENEMIES[t].glow, rim: 1.1 });
-    this.gb = { ember: new SpriteBatch(sc, spr.gem_ember, { cap: 700, glow: 3.5 }), moon: new SpriteBatch(sc, spr.gem_moon, { cap: 200, glow: 3.5 }), heart: new SpriteBatch(sc, spr.heart_pickup, { cap: 20, glow: 3 }) };
+    this.gb = { ember: new SpriteBatch(sc, spr.gem_ember, { cap: 700, glow: 1.4 }), moon: new SpriteBatch(sc, spr.gem_moon, { cap: 200, glow: 1.4 }), heart: new SpriteBatch(sc, spr.heart_pickup, { cap: 20, glow: 3 }) };
     this.glow = new FxBatch(sc, { cap: 5000 });
     this.px = new FxBatch(sc, { cap: 3000, square: true });
 
