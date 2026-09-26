@@ -4,3 +4,4 @@ dist/
 cmux-assets/
 assets/logs/
 .DS_Store
+.wrangler/
