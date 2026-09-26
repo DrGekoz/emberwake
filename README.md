@@ -27,3 +27,7 @@ npm run dev
 ```
 
 Built with Three.js and WebAudio. All art was generated with the Codex CLI and snapped to a pixel grid with `tools/pixelize.py`. All music and sound effects are synthesized in code.
+
+## License
+
+MIT © [mogita](https://github.com/mogita)
