@@ -30,7 +30,7 @@ if (mobile) {
   document.getElementById('pcHow').innerHTML = '<div>DRAG ANYWHERE TO MOVE</div><div>TAP DASH TO ESCAPE</div><div>your lantern fights on its own</div>';
 }
 const modeButtons = [...document.querySelectorAll('.mode')];
-modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b.id === 'modeEndless' ? 'endless' : b.id === 'modeDaily' ? 'daily' : 'story'; modeButtons.forEach((x) => x.classList.toggle('active', x === b)); });
+modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b.id === 'modeEndless' ? 'endless' : 'story'; modeButtons.forEach((x) => x.classList.toggle('active', x === b)); });
 try { best = +localStorage.getItem('emberwake.best') || 0; } catch { /* storage blocked */ }
 UI.setBest(best);
 UI.show('title');
@@ -52,7 +52,7 @@ addEventListener('keydown', (e) => {
 addEventListener('keyup', (e) => keys.delete(e.code));
 addEventListener('blur', () => { keys.clear(); if (state === 'play') setState('pause'); });
 const stage = document.getElementById('stage');
-stage.addEventListener('pointerdown', (e) => { if (mobile && state === 'play' && e.target === stage) { joy.active = true; joy.id = e.pointerId; joy.cx = e.clientX; joy.cy = e.clientY; stage.setPointerCapture(e.pointerId); } else onPress('Click'); });
+stage.addEventListener('pointerdown', (e) => { if (e.target.closest('button, input')) return; if (mobile && state === 'play' && e.target === stage) { joy.active = true; joy.id = e.pointerId; joy.cx = e.clientX; joy.cy = e.clientY; stage.setPointerCapture(e.pointerId); } else onPress('Click'); });
 stage.addEventListener('pointermove', (e) => { if (!joy.active || e.pointerId !== joy.id) return; joy.x = Math.max(-1, Math.min(1, (e.clientX - joy.cx) / 65)); joy.z = Math.max(-1, Math.min(1, (e.clientY - joy.cy) / 65)); });
 stage.addEventListener('pointerup', (e) => { if (e.pointerId === joy.id) { joy.active = false; joy.x = joy.z = 0; } });
 document.getElementById('dash').addEventListener('pointerdown', (e) => { e.stopPropagation(); dashBuf = 0.2; });

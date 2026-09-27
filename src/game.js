@@ -15,7 +15,7 @@ const NIGHT_AMB = new THREE.Color(0.22, 0.26, 0.46), DAWN_AMB = new THREE.Color(
 const NIGHT_MOON = new THREE.Color(0.45, 0.6, 1.0), DAWN_MOON = new THREE.Color(1.0, 0.72, 0.4);
 const NIGHT_FOG = new THREE.Color(0.02, 0.025, 0.07), DAWN_FOG = new THREE.Color(0.42, 0.3, 0.32);
 
-export const SPRITES = ['hero', 'shade', 'moth', 'crawler', 'wraith', 'golem', 'boss_moth', 'grave_warden_boss', 'dread_seraph', 'gem_ember', 'gem_moon', 'heart_pickup', 'brazier', ...PROP_TYPES];
+export const SPRITES = ['hero', 'shade', 'moth', 'crawler', 'wraith', 'golem', 'boss_moth', 'grave_warden_boss', 'dread_seraph', 'level4_ashen_titan', 'level5_frost_hag', 'gem_ember', 'gem_moon', 'heart_pickup', 'brazier', ...PROP_TYPES];
 
 export class Game {
   constructor(r, spr) {
@@ -49,6 +49,8 @@ export class Game {
     for (const t of ENEMY_TYPES) this.eb[t] = new SpriteBatch(sc, spr[t === 'boss' ? 'boss_moth' : t], { cap: t === 'boss' ? 2 : 420, glow: D.ENEMIES[t].glow, rim: 1.1 });
     this.eb.grave = new SpriteBatch(sc, spr.grave_warden_boss, { cap: 2, glow: 2.5, rim: 1.1 });
     this.eb.seraph = new SpriteBatch(sc, spr.dread_seraph, { cap: 2, glow: 3.0, rim: 1.1 });
+    const bossAssets = ['level4_ashen_titan','level5_frost_hag','level6_void_leviathan','level7_briar_queen','level8_sun_eater','level9_storm_archon','level10_dawn_reaper'];
+    bossAssets.slice(0, 2).forEach((n, i) => { this.eb[`level${i + 4}`] = new SpriteBatch(sc, spr[n], { cap: 2, glow: 2.5 + i * 0.15, rim: 1.1 }); });
     this.gb = { ember: new SpriteBatch(sc, spr.gem_ember, { cap: 700, glow: 1.4 }), moon: new SpriteBatch(sc, spr.gem_moon, { cap: 200, glow: 1.4 }), heart: new SpriteBatch(sc, spr.heart_pickup, { cap: 20, glow: 3 }) };
     this.glow = new FxBatch(sc, { cap: 5000 });
     this.px = new FxBatch(sc, { cap: 3000, square: true });
@@ -141,8 +143,10 @@ export class Game {
 
   spawn(type, x, z) {
     const b = D.ENEMIES[type];
-    const scale = type === 'boss' ? 1 : 1 + (this.t / D.NIGHT) * 1.3;
-    const e = { type, renderType: type === 'boss' ? (this.level === 1 ? 'boss' : this.level % 2 ? 'grave' : 'seraph') : type, x, z, vx: 0, vz: 0, kx: 0, kz: 0, hp: b.hp * scale, max: b.hp * scale, b, flash: 0, t: rand(0, 10), face: 1, orbT: 0, burn: 0, atk: rand(1.5, 3), slow: 0, dead: false, spawnT: 0 };
+    const scale = type === 'boss' ? 1 + (this.level - 1) * 0.34 : 1 + (this.t / D.NIGHT) * 1.3;
+    const bossStats = type === 'boss' ? { ...b, hp: b.hp * scale, speed: b.speed * (1 + (this.level - 1) * 0.045), dmg: b.dmg * (1 + (this.level - 1) * 0.12) } : b;
+    const renderType = type === 'boss' ? (this.level === 1 ? 'boss' : this.level === 2 ? 'grave' : this.level === 3 ? 'seraph' : `level${Math.min(5, this.level)}`) : type;
+    const e = { type, renderType, x, z, vx: 0, vz: 0, kx: 0, kz: 0, hp: bossStats.hp, max: bossStats.hp, b: bossStats, flash: 0, t: rand(0, 10), face: 1, orbT: 0, burn: 0, atk: rand(1.5, 3), slow: 0, dead: false, spawnT: 0 };
     if (type === 'boss') { e.ai = 'chase'; e.aiT = 3; e.seq = 0; }
     this.en.push(e);
     return e;
