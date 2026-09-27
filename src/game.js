@@ -15,7 +15,7 @@ const NIGHT_AMB = new THREE.Color(0.22, 0.26, 0.46), DAWN_AMB = new THREE.Color(
 const NIGHT_MOON = new THREE.Color(0.45, 0.6, 1.0), DAWN_MOON = new THREE.Color(1.0, 0.72, 0.4);
 const NIGHT_FOG = new THREE.Color(0.02, 0.025, 0.07), DAWN_FOG = new THREE.Color(0.42, 0.3, 0.32);
 
-export const SPRITES = ['hero', 'shade', 'moth', 'crawler', 'wraith', 'golem', 'boss_moth', 'gem_ember', 'gem_moon', 'heart_pickup', 'brazier', ...PROP_TYPES];
+export const SPRITES = ['hero', 'shade', 'moth', 'crawler', 'wraith', 'golem', 'boss_moth', 'grave_warden_boss', 'dread_seraph', 'gem_ember', 'gem_moon', 'heart_pickup', 'brazier', ...PROP_TYPES];
 
 export class Game {
   constructor(r, spr) {
@@ -47,6 +47,8 @@ export class Game {
     this.plSil = new SpriteBatch(sc, spr.hero, { cap: 1, silhouette: true, frames: HERO_FRAMES, face: true });
     this.eb = {};
     for (const t of ENEMY_TYPES) this.eb[t] = new SpriteBatch(sc, spr[t === 'boss' ? 'boss_moth' : t], { cap: t === 'boss' ? 2 : 420, glow: D.ENEMIES[t].glow, rim: 1.1 });
+    this.eb.grave = new SpriteBatch(sc, spr.grave_warden_boss, { cap: 2, glow: 2.5, rim: 1.1 });
+    this.eb.seraph = new SpriteBatch(sc, spr.dread_seraph, { cap: 2, glow: 3.0, rim: 1.1 });
     this.gb = { ember: new SpriteBatch(sc, spr.gem_ember, { cap: 700, glow: 1.4 }), moon: new SpriteBatch(sc, spr.gem_moon, { cap: 200, glow: 1.4 }), heart: new SpriteBatch(sc, spr.heart_pickup, { cap: 20, glow: 3 }) };
     this.glow = new FxBatch(sc, { cap: 5000 });
     this.px = new FxBatch(sc, { cap: 3000, square: true });
@@ -140,7 +142,7 @@ export class Game {
   spawn(type, x, z) {
     const b = D.ENEMIES[type];
     const scale = type === 'boss' ? 1 : 1 + (this.t / D.NIGHT) * 1.3;
-    const e = { type, x, z, vx: 0, vz: 0, kx: 0, kz: 0, hp: b.hp * scale, max: b.hp * scale, b, flash: 0, t: rand(0, 10), face: 1, orbT: 0, burn: 0, atk: rand(1.5, 3), slow: 0, dead: false, spawnT: 0 };
+    const e = { type, renderType: type === 'boss' ? (this.level === 1 ? 'boss' : this.level % 2 ? 'grave' : 'seraph') : type, x, z, vx: 0, vz: 0, kx: 0, kz: 0, hp: b.hp * scale, max: b.hp * scale, b, flash: 0, t: rand(0, 10), face: 1, orbT: 0, burn: 0, atk: rand(1.5, 3), slow: 0, dead: false, spawnT: 0 };
     if (type === 'boss') { e.ai = 'chase'; e.aiT = 3; e.seq = 0; }
     this.en.push(e);
     return e;
@@ -778,7 +780,7 @@ export class Game {
       else if (e.type === 'golem') { y += Math.abs(Math.sin(e.t * 4)) * 0.1; rot = Math.sin(e.t * 4) * 0.04; }
       const pop = Math.min(1, e.spawnT * 3);
       const dis = e.dawnT !== undefined ? clamp(1 - e.dawnT * 3, 0, 1) : 0;
-      this.eb[e.type].add(e.x, y, e.z, sx * (0.6 + pop * 0.4), sy * pop, rot, e.flash, dis, 1);
+      this.eb[e.renderType || e.type].add(e.x, y, e.z, sx * (0.6 + pop * 0.4), sy * pop, rot, e.flash, dis, 1);
       this.shadows.shadow(e.x, e.z + 0.05, b.r * 1.3 * (e.type === 'boss' ? 1.8 : 1), e.b.hover > 0.5 ? 0.35 : 0.55);
       if (e.type === 'boss') light(e.x, 2.5, e.z, 0.6, 0.8, 2, 10);
       else if (e.type === 'wraith' || e.type === 'golem') light(e.x, 1.2, e.z, e.type === 'golem' ? 0.2 : 0.8, e.type === 'golem' ? 0.9 : 0.15, e.type === 'golem' ? 0.8 : 0.3, 3.5);
