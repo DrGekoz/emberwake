@@ -118,8 +118,10 @@ export function setBest(v) {
   $('highScores').textContent = 'HIGHSCORES';
 }
 
-export function showScores(scores) {
-  $('scoreRows').innerHTML = scores.length ? scores.map((s, i) => `<div class="score-row"><b>${i + 1}</b><span>${escapeHtml(s.name)}</span><strong>${Number(s.score).toLocaleString('en-US')}</strong><small>LV ${s.level}</small></div>`).join('') : '<div class="empty-scores">NO SCORES YET</div>';
+export function showScores(scores, mode = 'campaign') {
+  const filtered = scores.filter((s) => (s.mode || 'campaign') === mode);
+  $('scoresCampaign').classList.toggle('active', mode === 'campaign'); $('scoresArcade').classList.toggle('active', mode === 'arcade');
+  $('scoreRows').innerHTML = filtered.length ? filtered.map((s, i) => `<div class="score-row"><b>${i + 1}</b><span>${escapeHtml(s.name)}</span><strong>${Number(s.score).toLocaleString('en-US')}</strong><small>LV ${s.level}</small></div>`).join('') : '<div class="empty-scores">NO SCORES YET</div>';
   $('scoresModal').classList.remove('hidden');
 }
 export function hideScores() { $('scoresModal').classList.add('hidden'); }

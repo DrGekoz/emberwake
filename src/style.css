@@ -135,6 +135,7 @@ kbd {
 #scoreName { margin:1cqw 0 .6cqw; width:18cqw; font:1.2cqw "Silkscreen"; padding:.6cqw; text-align:center; text-transform:uppercase; background:#101329; color:var(--text); border:.2cqw solid var(--gold); }
 #scoresModal { background:rgba(4,4,12,.95); z-index:20; pointer-events:auto; }
 #scoreRows { width:min(58cqw,90vw); max-height:55vh; overflow:auto; margin:1.5cqw 0; }
+.score-tabs { display:flex; gap:1cqw; margin-top:1cqw; }.score-tab { font:1.1cqw "Silkscreen"; color:var(--dim); background:rgba(12,14,34,.9); border:.2cqw solid var(--edge); padding:.55cqw 1cqw; cursor:pointer; }.score-tab.active { color:var(--ink); background:var(--gold); border-color:var(--gold); }
 .score-row { display:grid; grid-template-columns:3cqw 1fr auto 6cqw; gap:1cqw; align-items:center; padding:.65cqw 1cqw; border-bottom:.1cqw solid var(--edge); font-size:1.5cqw; }
 .score-row strong { color:var(--gold); font-family:"Silkscreen"; }.score-row small { color:var(--dim); }.empty-scores { color:var(--dim); text-align:center; padding:3cqw; }
 

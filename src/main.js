@@ -21,7 +21,7 @@ const fctx = fx.getContext('2d');
 
 let state = 'title', best = 0, lastT = performance.now(), dashBuf = 0, luDelay = 0;
 let scoreSaved = false, finalScore = 0;
-let runMode = 'story';
+let runMode = 'campaign';
 const mobile = matchMedia('(pointer: coarse), (max-width: 700px)').matches;
 const joy = { active: false, id: null, x: 0, z: 0, cx: 0, cy: 0 };
 if (mobile) {
@@ -30,15 +30,19 @@ if (mobile) {
   document.getElementById('pcHow').innerHTML = '<div>DRAG ANYWHERE TO MOVE</div><div>TAP DASH TO ESCAPE</div><div>your lantern fights on its own</div>';
 }
 const modeButtons = [...document.querySelectorAll('.mode')];
-modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b.id === 'modeEndless' ? 'endless' : 'story'; modeButtons.forEach((x) => x.classList.toggle('active', x === b)); });
+modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b.id === 'modeArcade' ? 'arcade' : 'campaign'; modeButtons.forEach((x) => x.classList.toggle('active', x === b)); });
 try { best = +localStorage.getItem('emberwake.best') || 0; } catch { /* storage blocked */ }
 UI.setBest(best);
 UI.show('title');
+let scoreTab = 'campaign';
 function readScores() { try { return JSON.parse(localStorage.getItem('emberwake.scores') || '[]'); } catch { return []; } }
-function writeScore() { if (scoreSaved) return; scoreSaved = true; const rows = readScores(); rows.push({ name: UI.scoreName(), score: finalScore, level: game.level }); rows.sort((a, b) => b.score - a.score); try { localStorage.setItem('emberwake.scores', JSON.stringify(rows.slice(0, 50))); } catch {} UI.hideScores(); }
-document.getElementById('highScores').onclick = (e) => { e.stopPropagation(); UI.showScores(readScores()); };
+function refreshScores() { UI.showScores(readScores(), scoreTab); }
+function writeScore() { if (scoreSaved) return; scoreSaved = true; const rows = readScores(); rows.push({ name: UI.scoreName(), score: finalScore, level: game.level, mode: runMode }); rows.sort((a, b) => b.score - a.score); try { localStorage.setItem('emberwake.scores', JSON.stringify(rows.slice(0, 100))); } catch {} UI.hideScores(); }
+document.getElementById('highScores').onclick = (e) => { e.stopPropagation(); UI.showScores(readScores(), scoreTab); };
 document.getElementById('closeScores').onclick = () => UI.hideScores();
 document.getElementById('saveScore').onclick = () => writeScore();
+document.getElementById('scoresCampaign').onclick = () => { scoreTab = 'campaign'; refreshScores(); };
+document.getElementById('scoresArcade').onclick = () => { scoreTab = 'arcade'; refreshScores(); };
 
 const keys = new Set();
 addEventListener('keydown', (e) => {
@@ -67,7 +71,7 @@ function onPress(code) {
 
 function begin() {
   A.initAudio();
-  game.runMode = runMode;
+  game.runMode = runMode === 'arcade' ? 'endless' : 'story';
   game.start();
   scoreSaved = false;
   A.setMusic(1);
