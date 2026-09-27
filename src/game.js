@@ -5,7 +5,7 @@ import * as A from './audio.js';
 import { HALF, buildWorld, colliderGrid } from './world.js';
 
 const TAU = Math.PI * 2;
-const HERO_FRAMES = 6;
+const HERO_FRAMES = 10;
 const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -95,8 +95,8 @@ export class Game {
   heroFrame() {
     const p = this.p;
     if (p.dead) return 0;
-    if (Math.hypot(p.vx, p.vz) > 0.8) return 2 + (Math.floor(p.walk) % 4);
-    return Math.floor(shared.uTime.value * 1.6) % 2;
+    if (Math.hypot(p.vx, p.vz) > 0.8) return 4 + (Math.floor(p.walk) % 6);
+        return Math.floor(shared.uTime.value * 1.6) % 2;
   }
 
   stat(id) { return this.lv[id] || 0; }
