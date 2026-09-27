@@ -55,6 +55,7 @@ export class Game {
     this.fireflies = Array.from({ length: 90 }, () => ({ x: rand(-HALF, HALF), z: rand(-HALF, HALF), y: rand(0.4, 2.5), ph: rand(0, TAU), sp: rand(0.3, 0.9) }));
     this.camX = 0; this.camZ = 6; this.camDist = 34;
     this.mode = 'title';
+    this.runMode = 'story';
     this.reset();
   }
 
@@ -288,7 +289,7 @@ export class Game {
     if (this.won > 0) this.won += rdt;
     if (!this.p.dead && !this.won) {
       this.t += dt;
-      if (this.t >= D.NIGHT) this.dawnBreak();
+      if (this.runMode !== 'endless' && this.t >= D.NIGHT) this.dawnBreak();
       else this.director(dt);
     }
     const nightT = this.t / D.NIGHT;

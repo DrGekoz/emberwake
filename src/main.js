@@ -20,6 +20,16 @@ const fx = document.getElementById('fx');
 const fctx = fx.getContext('2d');
 
 let state = 'title', best = 0, lastT = performance.now(), dashBuf = 0, luDelay = 0;
+let runMode = 'story';
+const mobile = matchMedia('(pointer: coarse), (max-width: 700px)').matches;
+const joy = { active: false, id: null, x: 0, z: 0, cx: 0, cy: 0 };
+if (mobile) {
+  document.body.classList.add('mobile');
+  document.getElementById('mobileHint').classList.remove('hidden');
+  document.getElementById('pcHow').innerHTML = '<div>DRAG ANYWHERE TO MOVE</div><div>TAP DASH TO ESCAPE</div><div>your lantern fights on its own</div>';
+}
+const modeButtons = [...document.querySelectorAll('.mode')];
+modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b.id === 'modeEndless' ? 'endless' : b.id === 'modeDaily' ? 'daily' : 'story'; modeButtons.forEach((x) => x.classList.toggle('active', x === b)); });
 try { best = +localStorage.getItem('emberwake.best') || 0; } catch { /* storage blocked */ }
 UI.setBest(best);
 UI.show('title');
@@ -35,7 +45,11 @@ addEventListener('keydown', (e) => {
 });
 addEventListener('keyup', (e) => keys.delete(e.code));
 addEventListener('blur', () => { keys.clear(); if (state === 'play') setState('pause'); });
-document.getElementById('stage').addEventListener('pointerdown', () => onPress('Click'));
+const stage = document.getElementById('stage');
+stage.addEventListener('pointerdown', (e) => { if (mobile && state === 'play' && e.target === stage) { joy.active = true; joy.id = e.pointerId; joy.cx = e.clientX; joy.cy = e.clientY; stage.setPointerCapture(e.pointerId); } else onPress('Click'); });
+stage.addEventListener('pointermove', (e) => { if (!joy.active || e.pointerId !== joy.id) return; joy.x = Math.max(-1, Math.min(1, (e.clientX - joy.cx) / 65)); joy.z = Math.max(-1, Math.min(1, (e.clientY - joy.cy) / 65)); });
+stage.addEventListener('pointerup', (e) => { if (e.pointerId === joy.id) { joy.active = false; joy.x = joy.z = 0; } });
+document.getElementById('dash').addEventListener('pointerdown', (e) => { e.stopPropagation(); dashBuf = 0.2; });
 
 function onPress(code) {
   if (state === 'title') begin();
@@ -47,6 +61,7 @@ function onPress(code) {
 
 function begin() {
   A.initAudio();
+  game.runMode = runMode;
   game.start();
   A.setMusic(1);
   A.ui();
@@ -61,8 +76,8 @@ function setState(s) {
 
 function input() {
   const k = (...c) => c.some((x) => keys.has(x));
-  let x = (k('KeyD', 'ArrowRight') ? 1 : 0) - (k('KeyA', 'ArrowLeft') ? 1 : 0);
-  let z = (k('KeyS', 'ArrowDown') ? 1 : 0) - (k('KeyW', 'ArrowUp') ? 1 : 0);
+  let x = mobile && joy.active ? joy.x : (k('KeyD', 'ArrowRight') ? 1 : 0) - (k('KeyA', 'ArrowLeft') ? 1 : 0);
+  let z = mobile && joy.active ? joy.z : (k('KeyS', 'ArrowDown') ? 1 : 0) - (k('KeyW', 'ArrowUp') ? 1 : 0);
   let dash = dashBuf > 0;
   const pad = navigator.getGamepads?.()[0];
   if (pad) {
