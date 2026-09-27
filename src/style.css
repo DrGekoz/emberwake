@@ -131,6 +131,12 @@ kbd {
 #stats .v { font-family: "Silkscreen"; color: var(--text); }
 #endscore { font-family: "Silkscreen"; font-size: 4cqw; color: var(--gold); text-shadow: 0 0.3cqw 0 #6b2c00, 0 0 2cqw rgba(255, 170, 60, 0.6); }
 #newbest { font-family: "Silkscreen"; font-size: 1.6cqw; color: var(--ink); background: var(--moon); padding: 0.2cqw 1cqw; margin-top: 0.8cqw; animation: pop 0.4s ease-out; }
+#highScores, #saveScore, #closeScores { font:1.2cqw "Silkscreen"; color:var(--gold); background:rgba(12,14,34,.9); border:.2cqw solid var(--edge); padding:.6cqw 1cqw; cursor:pointer; }
+#scoreName { margin:1cqw 0 .6cqw; width:18cqw; font:1.2cqw "Silkscreen"; padding:.6cqw; text-align:center; text-transform:uppercase; background:#101329; color:var(--text); border:.2cqw solid var(--gold); }
+#scoresModal { background:rgba(4,4,12,.95); z-index:20; pointer-events:auto; }
+#scoreRows { width:min(58cqw,90vw); max-height:55vh; overflow:auto; margin:1.5cqw 0; }
+.score-row { display:grid; grid-template-columns:3cqw 1fr auto 6cqw; gap:1cqw; align-items:center; padding:.65cqw 1cqw; border-bottom:.1cqw solid var(--edge); font-size:1.5cqw; }
+.score-row strong { color:var(--gold); font-family:"Silkscreen"; }.score-row small { color:var(--dim); }.empty-scores { color:var(--dim); text-align:center; padding:3cqw; }
 
 #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
 

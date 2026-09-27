@@ -20,6 +20,7 @@ const fx = document.getElementById('fx');
 const fctx = fx.getContext('2d');
 
 let state = 'title', best = 0, lastT = performance.now(), dashBuf = 0, luDelay = 0;
+let scoreSaved = false, finalScore = 0;
 let runMode = 'story';
 const mobile = matchMedia('(pointer: coarse), (max-width: 700px)').matches;
 const joy = { active: false, id: null, x: 0, z: 0, cx: 0, cy: 0 };
@@ -33,6 +34,11 @@ modeButtons.forEach((b) => b.onclick = (e) => { e.stopPropagation(); runMode = b
 try { best = +localStorage.getItem('emberwake.best') || 0; } catch { /* storage blocked */ }
 UI.setBest(best);
 UI.show('title');
+function readScores() { try { return JSON.parse(localStorage.getItem('emberwake.scores') || '[]'); } catch { return []; } }
+function writeScore() { if (scoreSaved) return; scoreSaved = true; const rows = readScores(); rows.push({ name: UI.scoreName(), score: finalScore, level: game.level }); rows.sort((a, b) => b.score - a.score); try { localStorage.setItem('emberwake.scores', JSON.stringify(rows.slice(0, 50))); } catch {} UI.hideScores(); }
+document.getElementById('highScores').onclick = (e) => { e.stopPropagation(); UI.showScores(readScores()); };
+document.getElementById('closeScores').onclick = () => UI.hideScores();
+document.getElementById('saveScore').onclick = () => writeScore();
 
 const keys = new Set();
 addEventListener('keydown', (e) => {
@@ -63,6 +69,7 @@ function begin() {
   A.initAudio();
   game.runMode = runMode;
   game.start();
+  scoreSaved = false;
   A.setMusic(1);
   A.ui();
   setState('play');
@@ -103,9 +110,11 @@ function openLevelUp() {
 function finish(win) {
   const bonus = win ? 3000 + Math.round(game.p.hp) * 20 : 0;
   const final = game.score + bonus;
+  finalScore = final;
   const isBest = final > best;
   if (isBest) { best = final; try { localStorage.setItem('emberwake.best', String(best)); } catch { /* storage blocked */ } }
   UI.endScreen(win, game, final, best, isBest);
+  UI.askScoreName();
   UI.setBest(best);
   game.endT = 0;
   setState('end');

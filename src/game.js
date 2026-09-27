@@ -78,6 +78,15 @@ export class Game {
     this.mode = 'play';
   }
 
+  advanceLevel() {
+    this.level++;
+    this.t = 0; this.spawnAcc = 0; this.surgeIdx = 0; this.boss = null; this.bossDone = false;
+    this.en.length = 0; this.eshots.length = 0; this.gems.length = 0;
+    this.p.hp = this.p.maxHp; this.p.dead = false; this.over = 0;
+    this.events.push({ banner: `LEVEL ${this.level}`, sub: 'the night deepens' });
+    A.setMusic(1);
+  }
+
   // --- helpers -------------------------------------------------------------
 
   // Atlas (tools/cycle.py): 0-1 idle breathe, 2-5 run (stride, pass, stride, pass).
@@ -217,6 +226,7 @@ export class Game {
         this.events.push({ banner: 'THE MATRIARCH FALLS', sub: `+${Math.round(b.score * this.mult())}` });
         A.setMusic(3);
       }
+      this.advanceLevel();
       return;
     }
     if (e.type === 'golem') { drop('moon', 1, 6); drop('ember', 3, 1); this.hitstop = 0.06; this.r.shake.amt = Math.max(this.r.shake.amt, 0.5); }
@@ -289,7 +299,7 @@ export class Game {
     if (this.won > 0) this.won += rdt;
     if (!this.p.dead && !this.won) {
       this.t += dt;
-      if (this.runMode !== 'endless' && this.t >= D.NIGHT) this.dawnBreak();
+      if (this.runMode !== 'endless' && this.t >= D.NIGHT) { if (this.bossDone) this.advanceLevel(); else this.over = 2.5; }
       else this.director(dt);
     }
     const nightT = this.t / D.NIGHT;

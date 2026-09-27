@@ -115,5 +115,14 @@ export function endScreen(win, g, final, best, isBest) {
 }
 
 export function setBest(v) {
-  $('best').textContent = v ? `BEST ${v.toLocaleString('en-US')}` : '';
+  $('highScores').textContent = 'HIGHSCORES';
 }
+
+export function showScores(scores) {
+  $('scoreRows').innerHTML = scores.length ? scores.map((s, i) => `<div class="score-row"><b>${i + 1}</b><span>${escapeHtml(s.name)}</span><strong>${Number(s.score).toLocaleString('en-US')}</strong><small>LV ${s.level}</small></div>`).join('') : '<div class="empty-scores">NO SCORES YET</div>';
+  $('scoresModal').classList.remove('hidden');
+}
+export function hideScores() { $('scoresModal').classList.add('hidden'); }
+export function askScoreName() { $('scoreName').value = ''; setTimeout(() => $('scoreName').focus(), 0); }
+export function scoreName() { return $('scoreName').value.trim().slice(0, 16) || 'EMBER'; }
+function escapeHtml(v) { return String(v).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }

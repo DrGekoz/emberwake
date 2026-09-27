@@ -45,7 +45,7 @@
           <div>your lantern fights on its own</div>
           <div>light the braziers, their fire burns the dark</div>
         </div>
-        <div id="best" class="best"></div>
+        <button id="highScores" class="best">HIGHSCORES</button>
       </div>
 
       <div id="levelup" class="screen hidden">
@@ -66,8 +66,12 @@
         <div id="stats"></div>
         <div id="endscore"></div>
         <div id="newbest" class="hidden">NEW BEST</div>
+        <input id="scoreName" maxlength="16" placeholder="ENTER NAME" autocomplete="nickname" />
+        <button id="saveScore">SAVE SCORE</button>
         <div class="press blink">PRESS <kbd>R</kbd> TO RISE AGAIN</div>
       </div>
+
+      <div id="scoresModal" class="screen hidden"><div class="lu-title">HIGHSCORES</div><div id="scoreRows"></div><button id="closeScores">CLOSE</button></div>
 
       <div id="flash"></div>
     </div>
