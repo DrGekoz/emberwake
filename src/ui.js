@@ -106,7 +106,8 @@ export function endScreen(win, g, final, best, isBest) {
     ['Shadows banished', g.kills],
     ['Best chain', g.bestCombo],
     ['Braziers lit', g.lit],
-    ['Level', g.level],
+    ['Player level', g.level],
+    ['Boss level', g.bossLevel],
     ['Best', best.toLocaleString('en-US')],
   ];
   $('stats').innerHTML = rows.map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join('');

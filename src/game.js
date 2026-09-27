@@ -69,7 +69,7 @@ export class Game {
     this.en = []; this.shots = []; this.eshots = []; this.gems = []; this.parts = []; this.texts = []; this.arcs = []; this.corpses = [];
     this.t = 0; this.spawnAcc = 0; this.surgeIdx = 0; this.boss = null; this.bossDone = false;
     this.cd = { bolt: 0.5, chain: 2, nova: 3 };
-    this.level = 1; this.xp = 0; this.need = D.xpNeed(1); this.pendingLevels = 0;
+    this.level = 1; this.bossLevel = 1; this.xp = 0; this.need = D.xpNeed(1); this.pendingLevels = 0;
     this.score = 0; this.kills = 0; this.combo = 0; this.comboT = 0; this.bestCombo = 0; this.streak = 0; this.streakT = 0; this.lit = 0;
     this.slow = 1; this.hitstop = 0; this.hurtFx = 0; this.dawn = 0; this.over = 0; this.won = 0; this.events = []; this.hinted = false;
     for (const b of this.world.braziers) { b.lit = 0; b.fuel = 0; b.prog = 0; }
@@ -83,11 +83,11 @@ export class Game {
   }
 
   advanceLevel() {
-    this.level++;
+    this.bossLevel++;
     this.t = 0; this.spawnAcc = 0; this.surgeIdx = 0; this.boss = null; this.bossDone = false;
     this.en.length = 0; this.eshots.length = 0; this.gems.length = 0;
     this.p.hp = this.p.maxHp; this.p.dead = false; this.over = 0;
-    this.events.push({ banner: `LEVEL ${this.level}`, sub: 'the night deepens' });
+    this.events.push({ banner: `BOSS LEVEL ${this.bossLevel}`, sub: `player level ${this.level} carries on` });
     A.setMusic(1);
   }
 
@@ -143,9 +143,9 @@ export class Game {
 
   spawn(type, x, z) {
     const b = D.ENEMIES[type];
-    const scale = type === 'boss' ? 1 + (this.level - 1) * 0.34 : 1 + (this.t / D.NIGHT) * 1.3;
-    const bossStats = type === 'boss' ? { ...b, hp: b.hp * scale, speed: b.speed * (1 + (this.level - 1) * 0.045), dmg: b.dmg * (1 + (this.level - 1) * 0.12) } : b;
-    const renderType = type === 'boss' ? (this.level === 1 ? 'boss' : this.level === 2 ? 'grave' : this.level === 3 ? 'seraph' : `level${Math.min(5, this.level)}`) : type;
+    const scale = type === 'boss' ? 1 + (this.bossLevel - 1) * 0.34 : 1 + (this.t / D.NIGHT) * 1.3;
+    const bossStats = type === 'boss' ? { ...b, hp: b.hp * scale, speed: b.speed * (1 + (this.bossLevel - 1) * 0.045), dmg: b.dmg * (1 + (this.bossLevel - 1) * 0.12) } : b;
+    const renderType = type === 'boss' ? (this.bossLevel === 1 ? 'boss' : this.bossLevel === 2 ? 'grave' : this.bossLevel === 3 ? 'seraph' : `level${Math.min(5, this.bossLevel)}`) : type;
     const e = { type, renderType, x, z, vx: 0, vz: 0, kx: 0, kz: 0, hp: bossStats.hp, max: bossStats.hp, b: bossStats, flash: 0, t: rand(0, 10), face: 1, orbT: 0, burn: 0, atk: rand(1.5, 3), slow: 0, dead: false, spawnT: 0 };
     if (type === 'boss') { e.ai = 'chase'; e.aiT = 3; e.seq = 0; }
     this.en.push(e);
@@ -272,7 +272,7 @@ export class Game {
     this.hurtFx = 0.75; this.hitstop = 0.05;
     this.r.shake.amt = Math.max(this.r.shake.amt, 0.8);
     this.combo = 0;
-    this.text(p.x, p.z, `-${dmg}`, '#ff5a4f', true, 2.4);
+    this.text(p.x, p.z, `-${Math.round(dmg)}`, '#ff5a4f', true, 2.4);
     this.emit(p.x, 1, p.z, 16, [3, 0.5, 0.4], { sp: 5, size: 0.25, life: 0.4 });
     A.hurt();
     if (p.hp <= 0) {

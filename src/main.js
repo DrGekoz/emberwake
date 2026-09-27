@@ -37,7 +37,7 @@ UI.show('title');
 let scoreTab = 'campaign';
 function readScores() { try { return JSON.parse(localStorage.getItem('emberwake.scores') || '[]'); } catch { return []; } }
 function refreshScores() { UI.showScores(readScores(), scoreTab); }
-function writeScore() { if (scoreSaved) return; scoreSaved = true; const rows = readScores(); rows.push({ name: UI.scoreName(), score: finalScore, level: game.level, mode: runMode }); rows.sort((a, b) => b.score - a.score); try { localStorage.setItem('emberwake.scores', JSON.stringify(rows.slice(0, 100))); } catch {} UI.hideScores(); }
+function writeScore() { if (scoreSaved) return; scoreSaved = true; const rows = readScores(); rows.push({ name: UI.scoreName(), score: finalScore, level: game.bossLevel, mode: runMode }); rows.sort((a, b) => b.score - a.score); try { localStorage.setItem('emberwake.scores', JSON.stringify(rows.slice(0, 100))); } catch {} UI.hideScores(); UI.show("title"); setState("title"); }
 document.getElementById('highScores').onclick = (e) => { e.stopPropagation(); UI.showScores(readScores(), scoreTab); };
 document.getElementById('closeScores').onclick = () => UI.hideScores();
 document.getElementById('saveScore').onclick = () => writeScore();
