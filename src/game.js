@@ -305,7 +305,7 @@ export class Game {
     if (this.won > 0) this.won += rdt;
     if (!this.p.dead && !this.won) {
       this.t += dt;
-      if (this.runMode !== 'endless' && this.t >= D.NIGHT) { if (this.bossDone) this.advanceLevel(); else this.over = 2.5; }
+      if (this.runMode !== 'endless' && this.t >= D.NIGHT) this.dawnBreak();
       else this.director(dt);
     }
     const nightT = this.t / D.NIGHT;

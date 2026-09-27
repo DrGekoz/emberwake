@@ -77,7 +77,7 @@ function begin() {
   A.setMusic(1);
   A.ui();
   setState('play');
-  UI.banner('NIGHTFALL', 'survive until dawn · light the braziers');
+  UI.banner(runMode === 'arcade' ? 'ENDLESS NIGHT' : 'NIGHTFALL', runMode === 'arcade' ? 'defeat each boss to deepen the night' : 'survive until dawn · light the braziers');
 }
 
 function setState(s) {

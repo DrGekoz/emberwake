@@ -22,10 +22,10 @@ export function hud(g) {
   set('hptext', 'text', `${Math.ceil(p.hp)} / ${p.maxHp}`);
   set('lvl', 'text', String(g.level));
   set('xpfill', 'width', `${Math.min(1, g.xp / g.need) * 100}%`);
-  set('nightfill', 'width', `${(g.t / NIGHT) * 100}%`);
+  set('nightfill', 'width', g.runMode === 'endless' ? '100%' : `${(g.t / NIGHT) * 100}%`);
   set('bossmark', 'left', `${(BOSS_AT / NIGHT) * 100}%`);
   const left = Math.max(0, Math.ceil(NIGHT - g.t));
-  set('clock', 'text', g.won ? 'DAWN' : `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')} until dawn`);
+  set('clock', 'text', g.runMode === 'endless' ? 'ENDLESS NIGHT' : g.won ? 'DAWN' : `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')} until dawn`);
   set('score', 'text', g.score.toLocaleString('en-US'));
   const m = g.mult();
   $('combo').classList.toggle('hidden', g.combo < 5);
